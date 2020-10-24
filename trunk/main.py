@@ -52,7 +52,6 @@ class Variable:
             if x.creator is not None:
                 funcs.append(x.creator)
 
-
 # --Function class--
 # 各関数の基本構造を記述した抽象クラス
 class Function:
@@ -96,7 +95,6 @@ class Square(Function):
         gx = 2 * x * gy
         return gx
 
-
 # --Exp class--
 # 変数に対してexpを計算する関数のクラス
 class Exp(Function):
@@ -104,7 +102,7 @@ class Exp(Function):
         return np.exp(x)
 
     def backward(self, gy):
-        x  = self.input.data
+        x  = self.inputs[0].data
         gx = np.exp(x) * gy
         return gx
 
@@ -140,18 +138,13 @@ def as_array(x):
         return np.array(x)
     return x
 
+# 数値微分を求める関数
 def numerical_diff(f, x, eps=1.e-6):
     x0 = Variable(x.data - eps)
     x1 = Variable(x.data + eps)
     y0 = f(x0)
     y1 = f(x1)
     return (y1.data - y0.data) / (2 * eps)
-
-def f(x):
-    A = Square()
-    B = Exp()
-    C = Square()
-    return C(B(A(x)))
 
 def main():
     x = Variable(np.array(3.))
